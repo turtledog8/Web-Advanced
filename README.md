@@ -72,4 +72,4 @@ hosters such as Gitlab and GitHub.
 
 In order to validate the functionality of your server it needs to be tested. Testing will be done using REST calls from
 within IntelliJ. These tests are explained in greater detail in the [testing section](./tests/rest/README.md). A few 
-examples for the default hello world and authentication endpoints have been added.
+examples for the default hello world and authentication endpoints have been added.# Web-Advanced
