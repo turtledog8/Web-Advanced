@@ -6,6 +6,22 @@
     let password = "";
     let errorMessage = "";
 
+    const sanitizeInput = (input) => {
+        if (typeof input !== 'string') {
+            return '';
+        }
+
+        input = input.replace(/'/g, "\\'");
+        input = input.replace(/"/g, '\\"');
+        input = input.replace(/</g, '&lt;');
+        input = input.replace(/>/g, '&gt;');
+        input = input.replace(/&/g, '&amp;');
+        input = input.replace(/'/g, '&#39;');
+        input = input.replace(/"/g, '&quot;');
+
+        return input;
+    }
+
     async function handleSubmit(event) {
         event.preventDefault(); // Prevent the default form submission behavior
 
@@ -31,22 +47,43 @@
             password,
         };
 
+        const sanitizedData = {};
+
+        Object.keys(data).forEach(key => {
+            sanitizedData[key] = sanitizeInput(data[key]);
+        });
         try {
             const response = await fetch("http://localhost:3000/register", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify(data),
+                body: JSON.stringify(sanitizedData),
             });
 
             if (response.status === 201) {
                 const result = await response.json();
                 localStorage.setItem("token", result.token);
 
-                errorMessage = "";
+                // After successful registration, initiate the login process
+                const loginResponse = await fetch("http://localhost:3000/login", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(sanitizedData),
+                });
 
-                window.location.href = "/";
+                if (loginResponse.status === 200) {
+                    const loginResult = await loginResponse.json();
+                    localStorage.setItem("token", loginResult.token);
+
+                    errorMessage = "";
+
+                    window.location.href = "/";
+                } else {
+                    errorMessage = "Login details were incorrect.";
+                }
             } else {
                 errorMessage = "Registration failed. Please try again.";
             }
@@ -86,7 +123,7 @@
         font-family: 'Poppins', sans-serif;
         font-weight: 400;
         text-align: center;
-        background-color: #f5f5f5;
+        background-color: var(--primary);
         padding: 20px;
         border-radius: 10px;
         max-width: 400px;
@@ -96,20 +133,20 @@
     label {
         display: block;
         margin-top: 10px;
-        color: #333;
+        color: var(--text);
     }
 
     input {
-        width: calc(100% - 20px);
+        width: 100%;
         padding: 10px;
         margin-top: 5px;
-        border: 1px solid #ccc;
+        border: 1px solid var(--accent);
         border-radius: 5px;
     }
 
     button {
-        background-color: orangered;
-        color: white;
+        background-color: var(--primary);
+        color: var(--text);
         border: none;
         padding: 10px 20px;
         border-radius: 5px;
@@ -118,7 +155,7 @@
     }
 
     button:hover {
-        background-color: darkorange;
+        background-color: var(--accent);
     }
 
     .error {

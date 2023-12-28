@@ -8,7 +8,7 @@
     const getImageSrc = (auction) => {
         return auction.images && auction.images.length > 0
             ? auction.images[0] // Use the first image if available
-            : "http://localhost:3000/img/logo.png";
+            : "http://localhost:3000/img/auction-logo.png";
     }
 
     // Create an event dispatcher
@@ -45,7 +45,7 @@
     .item-name {
         font-size: 18px;
         font-weight: 700;
-        color: var(--primary);
+        color: darkgreen;
         text-decoration: none;
     }
 </style>

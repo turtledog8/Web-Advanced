@@ -2,7 +2,7 @@
     export let auctions = [];
     export let updateAuctions;
     export let selectedTags = [];
-    export let tagData = [];
+    export let tagData = {};
 
     const toggleTag = (category, value) => {
         const tagIndex = selectedTags.findIndex(tag => tag.category === category && tag.value === value);
@@ -31,60 +31,86 @@
             });
         }
 
+        console.log('Selected Tags:', selectedTags);
+        console.log('Filtered Auctions:', filteredAuctions);
+
         updateAuctions(filteredAuctions);
     }
-
 
     const clearTags = () => {
         selectedTags = [];
         filterByTags();
     }
+
+    const capitalizeFirstLetter = (str) => {
+        return str.charAt(0).toUpperCase() + str.slice(1);
+    }
 </script>
 
-<div class="tag-filter">
-    {#each Object.keys(tagData) as category}
-        {#if tagData[category].size > 0}
-            <label>{category}:</label>
-            {#each Array.from(tagData[category]) as tag}
-                <label>
-                    <input type="checkbox" on:change={() => toggleTag(category, tag)} checked={selectedTags.some(selectedTag => selectedTag.category === category && selectedTag.value === tag)} />
-                    {tag}
-                </label>
+<div class="wrapper">
+    <div class="tag-filter">
+        {#each Object.keys(tagData) as category}
+            {#if tagData[category].size > 0}
+                <div class="item">
+                    <label>{capitalizeFirstLetter(category)}:</label>
+                    {#each Array.from(tagData[category]) as tag}
+                        <label>
+                            <input type="checkbox" on:change={() => toggleTag(category, tag)} checked={selectedTags.some(selectedTag => selectedTag.category === category && selectedTag.value === tag)} />
+                            {tag}
+                        </label>
+                    {/each}
+                </div>
+            {/if}
+        {/each}
+    </div>
+    {#if selectedTags.length > 0}
+        <div class="selected-tags">
+            {#each selectedTags as { category, value }}
+                <span on:click={() => toggleTag(category, value)} class="tag">{capitalizeFirstLetter(category)}: {value} &#10005;</span>
             {/each}
-        {/if}
-    {/each}
+        </div>
+    {/if}
     <button on:click={clearTags}>Clear Filter</button>
 </div>
 
 <style>
-    .tag-filter {
+    .wrapper {
         display: flex;
         flex-direction: column;
-        justify-content: center; /* Center vertically */
-        align-items: center; /* Center horizontally */
-        background-color: var(--secondary);
-        padding: 10px;
-        border-radius: 8px;
-        max-width: 60vw;
-        margin: auto; /* Center the entire component */
+        align-items: flex-start;
     }
 
-    label {
-        display: block;
-        font-weight: bold;
+    .tag-filter {
+        margin-bottom: 20px;
+    }
+
+    .item {
+        margin-bottom: 10px;
+    }
+
+    .item label {
+        margin-right: 10px;
     }
 
     input[type="checkbox"] {
         margin-right: 5px;
     }
 
-    button {
-        margin-top: 10px;
-        background-color: var(--primary);
-        color: white;
-        border: none;
-        border-radius: 4px;
-        padding: 8px 16px;
+    .selected-tags {
+        margin-bottom: 10px;
+    }
+
+    .tag {
+        background-color:darkgreen;
+        color: var(--accent);
+        padding: 5px 10px;
+        border-radius: 20px;
+        margin-right: 10px;
         cursor: pointer;
+    }
+
+    .tag:hover {
+        background-color: var(--accent);
+        color: darkgreen;
     }
 </style>

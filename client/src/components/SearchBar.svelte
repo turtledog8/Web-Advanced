@@ -32,7 +32,7 @@
         border: 1px solid var(--secondary);
         border-radius: 30px;
         padding: 15px; /* Increased padding for extra height */
-        background-color: var(--primary);
+        background-color: darkgreen;
         color: var(--text);
         max-width: 80%; /* Limit the width to 80% of the screen */
         margin: 5px auto; /* Center the search bar horizontally */
@@ -55,6 +55,6 @@
     }
 
     input::placeholder {
-        color: var(--accent);
+        color:darkgreen;
     }
 </style>

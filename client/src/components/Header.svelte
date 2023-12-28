@@ -1,6 +1,8 @@
 <script>
     export let active;
     export let isLoggedIn = false;
+    export let isAdmin = false;
+    export let id = "";
 
     const isJwtValid = () => {
         const token = localStorage.getItem('token');
@@ -18,7 +20,8 @@
                 return false;
             }
 
-            // Additional checks can be added here, such as issuer, audience, or other claims
+            isAdmin = decodedToken.isAdmin;
+            id = decodedToken.id;
 
             return true;
         } catch (error) {
@@ -28,14 +31,8 @@
     }
 
     isLoggedIn = isJwtValid();
-    const handleLogout = () => {
-        // Clear the user's session by removing the token from localStorage
-        localStorage.removeItem('token');
-
-        // Redirect the user to the login page
-        window.location.href = '/home';
-    };
 </script>
+
 <div class="wrapper">
     <nav class="navbar">
         <a href="/" id="logo">
@@ -49,14 +46,13 @@
             <li class="nav-item">
                 <a class:active={active === "/store"} href="/store">Store</a>
             </li>
+
             {#if isLoggedIn}
                 <li class="nav-item">
-                    <a class:active={active === "/"} href="/profile">
-                        <img class="profile-picture" src="placeholder-user-image.jpg" alt="Profile">
-                    </a>
+                    <a class:active={active === `/profile/${id}`} href={`/profile/${id}`}>Profile</a>
                 </li>
                 <li class="nav-item">
-                    <a class:active={active === "/login"} href="/login" on:click={handleLogout}>Logout</a>
+                    <a href="/logout">Log out</a>
                 </li>
             {:else}
                 <li class="nav-item">
@@ -88,7 +84,7 @@
     .wrapper {
         position: fixed;
         top: 0;
-        background-color: darkorange; /* Changed background color */
+        background-color: darkgreen; /* Changed background color */
         color: black;
         padding: 10px 0 5px;
         width: 100%;
@@ -131,7 +127,7 @@
 
     .nav-item:hover a {
         top: 10px;
-        color: darkorange;
+        color: darkgreen;
         background: black;
     }
 

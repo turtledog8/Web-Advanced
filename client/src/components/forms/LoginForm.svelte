@@ -48,7 +48,7 @@
 
                 errorMessage = "";
 
-                window.location.href = "/store";
+                window.location.href = "/";
             } else {
                 errorMessage = "Login details were incorrect. ";
             }

@@ -12,5 +12,9 @@
     "svelte-router-spa": "^7.0.1",
     "svelte-routing": "^2.6.0",
     "vite": "^2.0.0"
+  },
+  "devDependencies": {
+    "chai": "^4.3.10",
+    "mocha": "^10.2.0"
   }
 }
